@@ -27,7 +27,8 @@
     "appId": "com.toolbox.assistant",
     "productName": "Toolbox Assistant",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "files": [
       "dist/**/*",

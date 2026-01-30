@@ -1,5 +1,5 @@
 import { autoUpdater } from 'electron-updater';
-import { BrowserWindow, dialog } from 'electron';
+import { BrowserWindow, dialog, app } from 'electron';
 
 /**
  * 自动更新管理器
@@ -35,18 +35,23 @@ export class AutoUpdater {
     // 发现新版本
     autoUpdater.on('update-available', (info) => {
       console.log('✨ Update available:', info.version);
+      console.log('📦 Release date:', info.releaseDate);
+      console.log('📝 Release notes:', info.releaseNotes);
       
       dialog.showMessageBox({
         type: 'info',
         title: '发现新版本',
         message: `发现新版本 ${info.version}`,
-        detail: '是否立即下载更新？',
+        detail: `当前版本: ${app.getVersion()}\n新版本: ${info.version}\n\n是否立即下载更新？`,
         buttons: ['立即下载', '稍后提醒'],
         defaultId: 0,
         cancelId: 1
       }).then((result) => {
         if (result.response === 0) {
+          console.log('📥 User chose to download update');
           autoUpdater.downloadUpdate();
+        } else {
+          console.log('⏭️ User chose to skip update');
         }
       });
     });
@@ -54,6 +59,15 @@ export class AutoUpdater {
     // 没有新版本
     autoUpdater.on('update-not-available', (info) => {
       console.log('✅ App is up to date:', info.version);
+      
+      // 如果是手动检查，显示提示
+      dialog.showMessageBox({
+        type: 'info',
+        title: '已是最新版本',
+        message: '当前已是最新版本',
+        detail: `当前版本: ${info.version}\n\n无需更新`,
+        buttons: ['确定']
+      });
     });
 
     // 下载进度
@@ -70,6 +84,7 @@ export class AutoUpdater {
     // 下载完成
     autoUpdater.on('update-downloaded', (info) => {
       console.log('✅ Update downloaded:', info.version);
+      console.log('📦 Files:', info.files);
       
       if (this.mainWindow && !this.mainWindow.isDestroyed()) {
         this.mainWindow.setProgressBar(-1); // 清除进度条
@@ -79,13 +94,16 @@ export class AutoUpdater {
         type: 'info',
         title: '更新已下载',
         message: `新版本 ${info.version} 已下载完成`,
-        detail: '应用将在退出后自动安装更新。是否立即重启安装？',
+        detail: '应用将在退出后自动安装更新。\n\n是否立即重启安装？',
         buttons: ['立即重启', '稍后重启'],
         defaultId: 0,
         cancelId: 1
       }).then((result) => {
         if (result.response === 0) {
+          console.log('🔄 User chose to restart and install');
           autoUpdater.quitAndInstall();
+        } else {
+          console.log('⏭️ User chose to install later');
         }
       });
     });
@@ -93,12 +111,13 @@ export class AutoUpdater {
     // 更新错误
     autoUpdater.on('error', (error) => {
       console.error('❌ Update error:', error);
+      console.error('📍 Error stack:', error.stack);
       
       dialog.showMessageBox({
         type: 'error',
         title: '更新失败',
         message: '检查更新时出错',
-        detail: error.message,
+        detail: `错误信息: ${error.message}\n\n请检查网络连接或稍后重试`,
         buttons: ['确定']
       });
     });
@@ -110,9 +129,12 @@ export class AutoUpdater {
   checkForUpdates(): void {
     if (process.env.NODE_ENV === 'production') {
       console.log('🔍 Checking for updates...');
+      console.log('📍 Current version:', app.getVersion());
+      console.log('🔗 Update server: GitHub Releases');
       autoUpdater.checkForUpdates();
     } else {
       console.log('⚠️ Auto-update is disabled in development mode');
+      console.log('📍 Current version:', app.getVersion());
     }
   }
 
@@ -145,13 +167,26 @@ export class AutoUpdater {
    * 手动检查更新
    */
   manualCheckForUpdates(): void {
+    console.log('🔍 Manual check for updates triggered');
+    console.log('📍 Current version:', app.getVersion());
+    console.log('🌍 Environment:', process.env.NODE_ENV || 'production');
+    
     if (process.env.NODE_ENV === 'production') {
-      autoUpdater.checkForUpdates();
+      dialog.showMessageBox({
+        type: 'info',
+        title: '检查更新',
+        message: '正在检查更新...',
+        detail: '请稍候，正在连接服务器',
+        buttons: ['确定']
+      }).then(() => {
+        autoUpdater.checkForUpdates();
+      });
     } else {
       dialog.showMessageBox({
         type: 'info',
         title: '开发模式',
         message: '自动更新在开发模式下不可用',
+        detail: '请打包后测试自动更新功能\n\n当前版本: ' + app.getVersion(),
         buttons: ['确定']
       });
     }
