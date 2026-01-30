@@ -1,0 +1,27 @@
+{
+  "name": "toolbox-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Windows 桌面工具箱助手 - Monorepo",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "dev:watch": "node scripts/dev-watch.js",
+    "build": "pnpm -r build",
+    "start": "pnpm --filter desktop start",
+    "clean": "pnpm -r exec rm -rf dist node_modules"
+  },
+  "keywords": [
+    "windows",
+    "desktop",
+    "toolbox",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar": "^5.0.0",
+    "electron-builder": "^26.4.0",
+    "electron-rebuild": "^3.2.9",
+    "typescript": "^5.3.3"
+  }
+}

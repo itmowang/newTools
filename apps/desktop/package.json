@@ -1,0 +1,70 @@
+{
+  "name": "desktop",
+  "version": "1.0.0",
+  "description": "Windows Desktop Toolbox Assistant - 一个功能强大的 Windows 桌面工具箱",
+  "author": "Toolbox Team",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsc && electron .",
+    "build": "tsc",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "@toolbox/color-picker": "workspace:*",
+    "@toolbox/core": "workspace:*",
+    "@toolbox/port-manager": "workspace:*",
+    "electron-updater": "^6.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "electron": "^28.3.3",
+    "electron-reload": "2.0.0-alpha.1",
+    "typescript": "^5.3.3"
+  },
+  "build": {
+    "appId": "com.toolbox.assistant",
+    "productName": "Toolbox Assistant",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "itmowang",
+        "repo": "newTools"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Toolbox Assistant"
+    },
+    "portable": {
+      "artifactName": "ToolboxAssistant-Portable.exe"
+    }
+  }
+}
