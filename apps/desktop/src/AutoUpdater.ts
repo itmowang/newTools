@@ -127,7 +127,10 @@ export class AutoUpdater {
    * 检查更新
    */
   checkForUpdates(): void {
-    if (process.env.NODE_ENV === 'production') {
+    // 打包后的应用总是在生产环境
+    const isProduction = app.isPackaged || process.env.NODE_ENV === 'production';
+    
+    if (isProduction) {
       console.log('🔍 Checking for updates...');
       console.log('📍 Current version:', app.getVersion());
       console.log('🔗 Update server: GitHub Releases');
@@ -167,11 +170,15 @@ export class AutoUpdater {
    * 手动检查更新
    */
   manualCheckForUpdates(): void {
+    // 打包后的应用总是在生产环境
+    const isProduction = app.isPackaged || process.env.NODE_ENV === 'production';
+    
     console.log('🔍 Manual check for updates triggered');
     console.log('📍 Current version:', app.getVersion());
-    console.log('🌍 Environment:', process.env.NODE_ENV || 'production');
+    console.log('🌍 Is packaged:', app.isPackaged);
+    console.log('🌍 Environment:', process.env.NODE_ENV || 'not set');
     
-    if (process.env.NODE_ENV === 'production') {
+    if (isProduction) {
       dialog.showMessageBox({
         type: 'info',
         title: '检查更新',

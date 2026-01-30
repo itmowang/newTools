@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Windows Desktop Toolbox Assistant - 一个功能强大的 Windows 桌面工具箱",
   "author": "Toolbox Team",
   "main": "dist/main.js",
