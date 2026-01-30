@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Windows Desktop Toolbox Assistant - 一个功能强大的 Windows 桌面工具箱",
   "author": "Toolbox Team",
   "main": "dist/main.js",
@@ -26,6 +26,7 @@
   "build": {
     "appId": "com.toolbox.assistant",
     "productName": "Toolbox Assistant",
+    "artifactName": "${productName}-Setup-${version}.${ext}",
     "directories": {
       "output": "release",
       "buildResources": "build"
